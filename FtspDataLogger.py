@@ -16,7 +16,7 @@ class FtspMsg(tos.Packet):
                              ('is_synced',           'int', 1),
                              ('ftsp_root_addr',      'int', 2),
                              ('ftsp_seq',            'int', 1),
-                             ('ftsp_table_entries',  'int', 2),
+                             ('ftsp_table_entries',  'int', 1),
 			     ('light_sensor',        'int', 2),
 			     ('temp_sensor',         'int', 2),
 			     ('mic_sensor',          'int', 2)],

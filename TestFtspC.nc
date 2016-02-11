@@ -113,7 +113,7 @@ implementation
     }
      event void Check.fired() {
         call PhotoRead.read();
-        call PhotoRead.read();
+        call TempRead.read();
         call MicRead.read();
      }
 
@@ -138,7 +138,7 @@ implementation
 
     }
 
-     /* Temperature sample completed.  */
+     /* Temperature sample completed. */
   event void TempRead.readDone(error_t ok, uint16_t val) {
     if (ok == SUCCESS)
       {
