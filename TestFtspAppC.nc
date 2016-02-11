@@ -49,14 +49,15 @@ implementation {
   components new SensorMts300C(),new TimerMilliC() as MyTimer;
   App.Boot -> MainC;
 
-  components ActiveMessageC;
+  components CC2420ActiveMessageC,CC2420PacketC;
   App.Check -> MyTimer;
-  App.RadioControl -> ActiveMessageC;
-  App.Receive -> ActiveMessageC.Receive[AM_RADIO_COUNT_MSG];
-  App.AMSend -> ActiveMessageC.AMSend[AM_TEST_FTSP_MSG];
-  App.Packet -> ActiveMessageC;
-  
-  App.PacketTimeStamp -> ActiveMessageC;
+  App.Alarm -> MyTimer;
+  App.RadioControl -> CC2420ActiveMessageC;
+  App.Receive -> CC2420ActiveMessageC.Receive[AM_RADIO_COUNT_MSG];
+  App.AMSend -> CC2420ActiveMessageC.AMSend[AM_TEST_FTSP_MSG];
+  App.Packet -> CC2420ActiveMessageC;
+  App.PacketLink -> CC2420ActiveMessageC;
+  App.PacketTimeStamp -> CC2420PacketC;
   App.PhotoRead -> SensorMts300C.Light;
   App.TempRead -> SensorMts300C.Temp;
   App.MicRead -> SensorMts300C.Microphone;

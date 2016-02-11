@@ -42,10 +42,12 @@ module TestFtspC
     {
         interface GlobalTime<TMilli>;
         interface Timer<TMilli> as Check;
+        interface Timer<TMilli> as Alarm;
         interface TimeSyncInfo;
         interface Receive;
         interface AMSend;
         interface Packet;
+        interface PacketLink;
         interface Leds;
         interface PacketTimeStamp<TMilli,uint32_t>;
         interface Boot;
@@ -53,6 +55,7 @@ module TestFtspC
         interface Read<uint16_t> as TempRead;
         interface Read<uint16_t> as MicRead;
         interface SplitControl as RadioControl;
+        interface BusyWait<TMilli,uint16_t>;
     }
 }
 
@@ -69,7 +72,7 @@ implementation
     event void Boot.booted() {
         call RadioControl.start();
        
-        call Check.startPeriodic(100);
+        call Check.startPeriodic(1000);
     }
 
     event message_t* Receive.receive(message_t* msgPtr, void* payload, uint8_t len)
@@ -93,17 +96,19 @@ implementation
             report->lightSensor = lightSensor;
             report->tempSensor = tempSensor;
             report->micSensor = micSensor;
-
-            if (call AMSend.send(AM_BROADCAST_ADDR, &msg, sizeof(test_ftsp_msg_t)) == SUCCESS) {
-              locked = TRUE;
-            }
+            call PacketLink.setRetries(&msg, 5);
+            call PacketLink.setRetryDelay(&msg, 6);
+            call Alarm.startOneShot((TOS_NODE_ID-1)*50);
+            
         }
 
         return msgPtr;
     }
 
     event void AMSend.sendDone(message_t* ptr, error_t success) {
+       
         locked = FALSE;
+        
         return;
     }
      event void Check.fired() {
@@ -116,7 +121,7 @@ implementation
     event void RadioControl.stopDone(error_t error){}
 
 
-     /* Light sample completed. Check if it indicates theft */
+    
   event void PhotoRead.readDone(error_t ok, uint16_t val) {
     if (ok == SUCCESS)
       {
@@ -125,6 +130,13 @@ implementation
      
       }
   }
+
+    event void Alarm.fired(){
+        if (call AMSend.send(AM_BROADCAST_ADDR, &msg, sizeof(test_ftsp_msg_t)) == SUCCESS) {
+              locked = TRUE;
+            }
+
+    }
 
      /* Temperature sample completed.  */
   event void TempRead.readDone(error_t ok, uint16_t val) {

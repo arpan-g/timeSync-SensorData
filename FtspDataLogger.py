@@ -33,7 +33,7 @@ while True:
     if p and p.type == AM_TEST_FTSP_MSG:
         msg = FtspMsg(p.data)
         print int(time.time()), msg.src_addr, msg.counter, msg.global_rx_timestamp, msg.light_sensor,msg.temp_sensor,msg.mic_sensor,msg.is_synced 
-	data = str(time.time())+" "+str(msg.src_addr)+" "+str(msg.counter)+" "+str(msg.global_rx_timestamp)+" "+str(msg.is_synced)+"\n"
+	data = str(time.time())+" "+str(msg.src_addr)+" "+str(msg.counter)+" "+str(msg.global_rx_timestamp)+" "+str(msg.light_sensor)+" "+str(msg.temp_sensor)+" "+str(msg.mic_sensor)+" "+str(msg.is_synced)+" "+"\n"
 	f.write(data)
         #print msg
 f.close()

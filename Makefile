@@ -14,6 +14,7 @@ PFLAGS += -DMTS310CB
 PFLAGS += -DTIMESYNC_RATE=3
 #PFLAGS += -DTIMESYNC_DEBUG
 
-PFLAGS += -I$(TOSDIR)/lib/ftsp -I$(TOSDIR)/../apps/RadioCountToLeds
+PFLAGS += -I$(TOSDIR)/lib/ftsp -I$(TOSDIR)/../apps/RadioCountToLeds -I$(TOSDIR)/tos/chips/msp430/timer
+CFLAGS=-DPACKET_LINK
 
 include $(MAKERULES)
